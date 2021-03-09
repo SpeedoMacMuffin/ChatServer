@@ -11,7 +11,7 @@ const options = {
 };
 const io = require("socket.io")(httpServer, options);
 
-io.on("connection", (socket) => {
+io.on("connect", (socket) => {
   const msgHistory = db.collection("messages");
   //console.log when new User connects
   console.log(`${socket.id} is connected`);
@@ -27,6 +27,10 @@ io.on("connection", (socket) => {
     });
   socket.on("disconnect", (reason) => {
     console.log(`${socket.id} has disconnected`);
+  });
+
+  socket.on("newFile", () => {
+    io.emit("loadNewFile");
   });
 
   //emits Chat-History from local MongoDB to User when Room is joined
