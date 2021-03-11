@@ -1,8 +1,9 @@
 const db = require("./dbConfig");
-const moment = require("moment");
+// const PORT = require("./serverConfig");
 const app = require("express")();
 const httpServer = require("http").createServer(app);
-const PORT = 8000;
+const server = require("./serverConfig");
+const PORT = server.PORT;
 const options = {
   cors: {
     origin: "*",
