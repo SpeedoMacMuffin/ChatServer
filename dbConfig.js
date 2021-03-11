@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose.connect(
-  "mongodb://localhost:27017/DeadNode",
+  "mongodb://deadnode.io:27017/deadnode",
   (err, db) => {
     if (err) {
       throw err;

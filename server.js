@@ -2,10 +2,10 @@ const db = require("./dbConfig");
 const moment = require("moment");
 const app = require("express")();
 const httpServer = require("http").createServer(app);
-const PORT = 8000;
+const PORT = 443;
 const options = {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 };
