@@ -1,5 +1,4 @@
 const db = require("./dbConfig");
-// const PORT = require("./serverConfig");
 const app = require("express")();
 const httpServer = require("http").createServer(app);
 const server = require("./serverConfig");
