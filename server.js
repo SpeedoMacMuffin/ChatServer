@@ -29,10 +29,6 @@ io.on("connect", (socket) => {
     console.log(`${socket.id} has disconnected`);
   });
 
-  socket.on("newFile", () => {
-    io.emit("loadNewFile");
-  });
-
   //emits Chat-History from local MongoDB to User when Room is joined
   socket.on("room", (data) => {
     console.log("join room");
@@ -64,6 +60,25 @@ io.on("connect", (socket) => {
       content: message.content,
       username: message.username,
     });
+  });
+  socket.on("delete", () => {
+    msgHistory.deleteMany({});
+    setTimeout(() => {
+      msgHistory
+        .find({})
+        .sort({ _id: 1 })
+        .toArray((err, res) => {
+          if (err) {
+            throw err;
+          }
+          io.emit("history", res);
+          console.log("history emitted");
+        });
+    }, 2000);
+  });
+  //emits to all sockets when upload-folder gets changed
+  socket.on("files-change", () => {
+    io.emit("loadNewFile");
   });
 });
 
