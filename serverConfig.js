@@ -1,5 +1,5 @@
 const server = {
-  PORT: 8000,
+  PORT: 443,
   dbURL: "localhost",
 };
 
