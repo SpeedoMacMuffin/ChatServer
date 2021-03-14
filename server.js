@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
     const count = io.engine.clientsCount;
     socket.to("admin").emit("clients", count);
   });
-  //emits Chat-History from local MongoDB to User when Room is joined
+
   socket.on("room", (data) => {
     console.log(socket.id + " joined " + data.room);
     console.log(data);
