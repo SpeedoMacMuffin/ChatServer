@@ -13,6 +13,8 @@ const io = require("socket.io")(httpServer, options);
 
 io.on("connection", (socket) => {
   const msgHistory = db.collection("messages");
+  const count = io.engine.clientsCount;
+  socket.to("admin").emit("clients", count);
   //console.log when new User connects
   console.log(`${socket.id} is connected`);
   // msgHistory
@@ -28,7 +30,10 @@ io.on("connection", (socket) => {
   // socket.on("disconnect", (reason) => {
   //   console.log(`${socket.id} has disconnected`);
   // });
-
+  socket.on("disconnect", () => {
+    const count = io.engine.clientsCount;
+    socket.to("admin").emit("clients", count);
+  });
   //emits Chat-History from local MongoDB to User when Room is joined
   socket.on("room", (data) => {
     console.log(socket.id + " joined " + data.room);
@@ -58,20 +63,13 @@ io.on("connection", (socket) => {
           if (err) {
             throw err;
           }
-          socket.emit("admin", res);
-          console.log("message count sent");
+          socket.emit("chatadmin", res);
+          console.log("message count sent " + res);
         });
+        break;
+      case "home":
+        console.log("home connected");
     }
-  });
-  socket.on("newMessage", (message) => {
-    msgHistory.insertOne({
-      content: message.content,
-      username: message.username,
-    });
-    socket.broadcast.to("chat-room").emit("receiveNewMessage", {
-      content: message.content,
-      username: message.username,
-    });
   });
 
   socket.on("leaving room", (data) => {
@@ -79,10 +77,38 @@ io.on("connection", (socket) => {
     socket.leave(data.room);
   });
 
-  socket.on("admin-stats", () => {
+  socket.on("newMessage", (message) => {
+    msgHistory.insertOne({
+      content: message.content,
+      username: message.username,
+    });
+    socket.to("chat").emit("receiveNewMessage", {
+      content: message.content,
+      username: message.username,
+    });
+    msgHistory.find({}).count((err, res) => {
+      if (err) {
+        throw err;
+      }
+      io.in("admin").emit("chatadmin", res);
+      console.log("message count sent");
+    });
+  });
+
+  socket.on("clients", () => {
     const count = io.engine.clientsCount;
-    socket.emit("admin-stats", count);
-    console.log(count);
+    socket.emit("clients", count);
+  });
+  socket.on("files-deleted", () => {
+    io.in("files").emit("files-deleted");
+    // socket.emit("files-change");
+    console.log("files deleted");
+  });
+  socket.on("file-added", () => {
+    io.in("files").emit("file-added");
+    io.in("admin").emit("newFile");
+    // socket.emit("files-change");
+    console.log("new file emitted");
   });
   socket.on("admin", () => {
     // console.log("admin connected");
@@ -109,11 +135,6 @@ io.on("connection", (socket) => {
           console.log("history deleted");
         });
     }, 2000);
-  });
-  //emits to all sockets when upload-folder gets changed
-  socket.on("files-change", (file) => {
-    socket.in("files").emit("loadNewFile", file);
-    console.log(file);
   });
 });
 
