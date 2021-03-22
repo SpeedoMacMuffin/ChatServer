@@ -29,6 +29,8 @@ This is an Open-Source Project, feel free to contribute to this project!
 
 [AdminServer](https://github.com/SpeedoMacMuffin/AdminServer)
 
+_A static version of the application is hosted [here](https://deadnode-io.herokuapp.com). Some functionalities are disabled_
+
 ## 3. Tech-Stack
 
 ---
@@ -350,6 +352,7 @@ $ sudo systemctl reboot
 ```
 
 Now, finally, after rebooting you should be able to see the access point "DeadNode".
+Login, open your browser and go to "deadnode.io"
 
 The default credentials are:
 
