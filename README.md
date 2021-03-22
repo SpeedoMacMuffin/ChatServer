@@ -15,7 +15,7 @@ DeadNode is a Web-Application running fully on a Raspberry Pi (tested and run on
 
 This project was inspired by the Open-Source Project [PirateBox](https://piratebox.cc/).
 
-This is an Open-Source Project, feel free to contribute to this project!
+This is an Open-Source Project, feel free to contribute!
 
 ## 2. Linked Repositories
 
